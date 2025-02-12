@@ -90,7 +90,7 @@ jobs:
         id: config-syft
         shell: bash
         run: |
-          echo $(($(nproc)*2)) >> $SYFT_PARALLELISM
+          SYFT_PARALLELISM=$(($(nproc)*2))
 
       - name: Build SBOM
         uses: anchore/sbom-action@v0
