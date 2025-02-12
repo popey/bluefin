@@ -24,7 +24,6 @@ on:
         value: ${{ jobs.check.outputs.images }}
 env:
   IMAGE_REGISTRY: ghcr.io/${{ github.repository_owner }}
-  SYFT_PARALLELISM: $(($(nproc)*2))
   
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref || github.run_id }}-${{ inputs.brand_name}}-${{ inputs.stream_name }}
@@ -87,7 +86,14 @@ jobs:
                                "${{ matrix.image_flavor }}" \
                                "${{ inputs.kernel_pin }}"
 
-      - uses: anchore/sbom-action@v0
+      - name: Configure Syft
+        id: config-syft
+        shell: bash
+        run: |
+          echo $(($(nproc)*2)) >> $SYFT_PARALLELISM
+
+      - name: Build SBOM
+        uses: anchore/sbom-action@v0
         id: sbom-image
         with:
           upload-artifact: true
