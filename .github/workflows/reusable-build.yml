@@ -97,14 +97,16 @@ jobs:
         id: config-syft
         shell: bash
         run: |
-          SYFT_PARALLELISM=$(($(nproc)*2))
-
+          sudo systemctl start podman.socket
+          systemctl start --user podman.socket
+          export SYFT_PARALLELISM=$(($(nproc)*2))
+          
       - name: Build SBOM
         uses: anchore/sbom-action@v0
         id: sbom-image
         with:
           upload-artifact: true
-          image: podman:localhost/${{ matrix.base_name }}:${{ matrix.stream_name }}
+          image: podman:localhost/${{ env.IMAGE_NAME }}:${{ matrix.stream_name }}
 
       - name: Rechunk Image
         id: rechunk-image
