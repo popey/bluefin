@@ -102,14 +102,19 @@ jobs:
           export SYFT_PARALLELISM=$(($(nproc)*2))
           export SYFT_LOG_LEVEL=trace
           export SYFT_SOURCE_IMAGE_DEFAULT_PULL_SOURCE=podman
+          curl -sSfL https://raw.githubusercontent.com/anchore/syft/main/install.sh | sh -s -- -b ./
+          # Run without sudo
+          ./syft localhost/${{ env.IMAGE_NAME }}:${{ matrix.stream_name }}
+          # Why not both
+          sudo ./syft localhost/${{ env.IMAGE_NAME }}:${{ matrix.stream_name }}
           
-      - name: Build SBOM
-        uses: anchore/sbom-action@v0
-        id: sbom-image
-        with:
-          upload-artifact: true
-          #image: podman:localhost/${{ env.IMAGE_NAME }}:${{ matrix.stream_name }}
-          image: localhost/${{ env.IMAGE_NAME }}:${{ matrix.stream_name }}
+      # - name: Build SBOM
+      #   uses: anchore/sbom-action@v0
+      #   id: sbom-image
+      #   with:
+      #     upload-artifact: true
+      #     #image: podman:localhost/${{ env.IMAGE_NAME }}:${{ matrix.stream_name }}
+      #     image: localhost/${{ env.IMAGE_NAME }}:${{ matrix.stream_name }}
 
       - name: Rechunk Image
         id: rechunk-image
