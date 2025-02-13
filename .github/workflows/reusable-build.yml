@@ -86,6 +86,13 @@ jobs:
                                "${{ matrix.image_flavor }}" \
                                "${{ inputs.kernel_pin }}"
 
+      - name: List images
+        id: list-images
+        shell: bash
+        run: |
+          set -eoux pipefail
+          sudo podman image list
+
       - name: Configure Syft
         id: config-syft
         shell: bash
