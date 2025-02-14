@@ -106,7 +106,7 @@ jobs:
           # Run without sudo
           #./syft localhost/${{ env.IMAGE_NAME }}:${{ matrix.stream_name }}
           # Why not both
-          sudo ./syft localhost/${{ env.IMAGE_NAME }}:${{ matrix.stream_name }}
+          sudo ./syft -v localhost/${{ env.IMAGE_NAME }}:${{ matrix.stream_name }}
           
       # - name: Build SBOM
       #   uses: anchore/sbom-action@v0
